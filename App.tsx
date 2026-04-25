@@ -57,6 +57,8 @@ type MoneyEntry = {
   source: 'voice' | 'manual';
 };
 
+type Period = 'Günlük' | 'Haftalık' | 'Aylık';
+
 type ParsedVoice = {
   type: EntryType;
   category: EntryCategory;
@@ -106,45 +108,6 @@ const expensePlaceholders = [
 
 const incomeDefaultLabels = ['Maaş', 'Freelance', 'Kira geliri'];
 
-const demoExpenses: MoneyEntry[] = [
-  {
-    id: 'demo-1',
-    type: 'expense',
-    category: 'food',
-    title: 'Kahve',
-    amount: 45,
-    date: new Date(new Date().setHours(9, 15, 0, 0)),
-    source: 'manual',
-  },
-  {
-    id: 'demo-2',
-    type: 'expense',
-    category: 'transport',
-    title: 'Otobüs',
-    amount: 25,
-    date: new Date(new Date().setHours(8, 20, 0, 0)),
-    source: 'manual',
-  },
-  {
-    id: 'demo-3',
-    type: 'expense',
-    category: 'food',
-    title: 'Market',
-    amount: 120,
-    date: new Date(new Date().setHours(12, 45, 0, 0)),
-    source: 'manual',
-  },
-  {
-    id: 'demo-4',
-    type: 'expense',
-    category: 'education',
-    title: 'Kitap',
-    amount: 130,
-    date: new Date(new Date().setHours(16, 30, 0, 0)),
-    source: 'manual',
-  },
-];
-
 const formatter = new Intl.NumberFormat('tr-TR', {
   maximumFractionDigits: 0,
 });
@@ -157,6 +120,26 @@ function parseAmount(value: string) {
 
 function money(value: number) {
   return `${formatter.format(Math.max(0, Math.round(value)))} TL`;
+}
+
+function formatEntryDate(date: Date, period: Period) {
+  if (period === 'Günlük') {
+    return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  if (period === 'Haftalık') {
+    return date.toLocaleDateString('tr-TR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  }
+
+  return `${date.toLocaleDateString('tr-TR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  })} ${date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}`;
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -530,7 +513,7 @@ function CartGlyph() {
   );
 }
 
-function EntryListItem({ entry }: { entry: MoneyEntry }) {
+function EntryListItem({ entry, period }: { entry: MoneyEntry; period: Period }) {
   const glyph =
     entry.category === 'food'
       ? '◫'
@@ -551,9 +534,7 @@ function EntryListItem({ entry }: { entry: MoneyEntry }) {
       </View>
       <View style={styles.entryTextWrap}>
         <Text style={styles.entryTitle}>{entry.title}</Text>
-        <Text style={styles.entrySub}>
-          {entry.date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
-        </Text>
+        <Text style={styles.entrySub}>{formatEntryDate(entry.date, period)}</Text>
       </View>
       <Text style={styles.entryAmount}>{money(entry.amount)}</Text>
     </View>
@@ -617,8 +598,8 @@ export default function App() {
   const [incomeRows, setIncomeRows] = useState(() => makeRows('income', incomePlaceholders));
   const [expenseRows, setExpenseRows] = useState(() => makeRows('expense', expensePlaceholders));
   const [selectedSavings, setSelectedSavings] = useState(0);
-  const [entries, setEntries] = useState<MoneyEntry[]>(demoExpenses);
-  const [period, setPeriod] = useState<'Günlük' | 'Haftalık' | 'Aylık'>('Günlük');
+  const [entries, setEntries] = useState<MoneyEntry[]>([]);
+  const [period, setPeriod] = useState<Period>('Günlük');
   const [transcript, setTranscript] = useState('');
   const [recognizing, setRecognizing] = useState(false);
   const [voiceError, setVoiceError] = useState('');
@@ -726,7 +707,13 @@ export default function App() {
   const dashboardSpent = totals.spent;
   const dashboardRemaining = Math.max(0, totals.remainingSafe);
   const dashboardRatio = totals.spendRatio;
-  const todaySpent = visibleEntries.reduce((sum, entry) => sum + entry.amount, 0);
+  const periodSpent = visibleEntries.reduce((sum, entry) => sum + entry.amount, 0);
+  const spendTitle =
+    period === 'Günlük'
+      ? 'Bugünkü harcamalar'
+      : period === 'Haftalık'
+        ? 'Bu haftaki harcamalar'
+        : 'Bu ayki harcamalar';
 
   const choosePercent = (percent: number) => {
     setSelectedSavings(Math.round(totals.monthlyRemaining * percent));
@@ -1503,19 +1490,28 @@ export default function App() {
         </View>
 
         <View style={styles.dashboardSpendHeader}>
-          <Text style={styles.dashboardSpendTitle}>Bugünkü harcamalar</Text>
-          <Text style={styles.dashboardSpendTotal}>{money(todaySpent)}</Text>
+          <Text style={styles.dashboardSpendTitle}>{spendTitle}</Text>
+          <Text style={styles.dashboardSpendTotal}>{money(periodSpent)}</Text>
         </View>
         <Text style={styles.dashboardSpendSub}>Toplam</Text>
 
         <View style={styles.dashboardListCard}>
           <View style={styles.entryList}>
-            {visibleEntries.map((entry, index) => (
-              <View key={entry.id}>
-                <EntryListItem entry={entry} />
-                {index < visibleEntries.length - 1 ? <View style={styles.dashboardEntryDivider} /> : null}
+            {visibleEntries.length > 0 ? (
+              visibleEntries.map((entry, index) => (
+                <View key={entry.id}>
+                  <EntryListItem entry={entry} period={period} />
+                  {index < visibleEntries.length - 1 ? (
+                    <View style={styles.dashboardEntryDivider} />
+                  ) : null}
+                </View>
+              ))
+            ) : (
+              <View style={styles.emptyEntryState}>
+                <Text style={styles.emptyEntryTitle}>Henüz harcama yok</Text>
+                <Text style={styles.emptyEntryText}>Harcama ekledikçe bu liste dolacak.</Text>
               </View>
-            ))}
+            )}
           </View>
         </View>
 
@@ -2582,6 +2578,7 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     fontWeight: '700',
     marginRight: 12,
+    textAlign: 'right',
   },
   entryAmount: {
     color: '#20312A',
@@ -2842,6 +2839,26 @@ const styles = StyleSheet.create({
   dashboardEntryDivider: {
     height: 1,
     backgroundColor: '#F0ECE3',
+  },
+  emptyEntryState: {
+    minHeight: 78,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+  },
+  emptyEntryTitle: {
+    color: '#424C47',
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '900',
+    marginBottom: 2,
+  },
+  emptyEntryText: {
+    color: '#9B9A91',
+    fontSize: 11,
+    lineHeight: 15,
+    fontWeight: '700',
+    textAlign: 'center',
   },
   dashboardActionRow: {
     flexDirection: 'row',
