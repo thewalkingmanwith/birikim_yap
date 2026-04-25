@@ -534,19 +534,11 @@ function EntryListItem({ entry, period }: { entry: MoneyEntry; period: Period })
       <View style={styles.entryIcon}>
         <Text style={styles.entryIconText}>{glyph}</Text>
       </View>
-      <View style={styles.entryTitleCell}>
-        <Text numberOfLines={1} style={styles.entryTitle}>
-          {entry.title}
-        </Text>
+      <View style={styles.entryTextWrap}>
+        <Text style={styles.entryTitle}>{entry.title}</Text>
+        <Text style={styles.entrySub}>{formatEntryDate(entry.date, period)}</Text>
       </View>
-      <View style={styles.entryDateCell}>
-        <Text adjustsFontSizeToFit minimumFontScale={0.82} numberOfLines={1} style={styles.entrySub}>
-          {formatEntryDate(entry.date, period)}
-        </Text>
-      </View>
-      <View style={styles.entryAmountCell}>
-        <Text style={styles.entryAmount}>{money(entry.amount)}</Text>
-      </View>
+      <Text style={styles.entryAmount}>{money(entry.amount)}</Text>
     </View>
   );
 }
@@ -587,18 +579,16 @@ function SwipeMoneyRow({
           onChangeText={(value) => onChange('name', value)}
           style={styles.incomeNameInput}
         />
-        <View style={styles.incomeAmountCell}>
-          <TextInput
-            placeholder="0"
-            placeholderTextColor="#2B3330"
-            value={row.amount}
-            onChangeText={(value) => onChange('amount', value)}
-            keyboardType="numeric"
-            maxLength={12}
-            style={styles.incomeAmountInput}
-          />
-          <Text style={styles.incomeCurrency}>TL</Text>
-        </View>
+        <TextInput
+          placeholder="0"
+          placeholderTextColor="#2B3330"
+          value={row.amount}
+          onChangeText={(value) => onChange('amount', value)}
+          keyboardType="numeric"
+          maxLength={12}
+          style={styles.incomeAmountInput}
+        />
+        <Text style={styles.incomeCurrency}>TL</Text>
       </View>
     </Swipeable>
   );
@@ -1508,19 +1498,6 @@ export default function App() {
         <Text style={styles.dashboardSpendSub}>Toplam</Text>
 
         <View style={styles.dashboardListCard}>
-          {visibleEntries.length > 0 ? (
-            <View style={styles.dashboardTableHeader}>
-              <Text style={[styles.dashboardTableHeaderText, styles.dashboardTableTitleHeader]}>
-                Harcama
-              </Text>
-              <Text style={[styles.dashboardTableHeaderText, styles.dashboardTableDateHeader]}>
-                Zaman
-              </Text>
-              <Text style={[styles.dashboardTableHeaderText, styles.dashboardTableAmountHeader]}>
-                Tutar
-              </Text>
-            </View>
-          ) : null}
           <ScrollView
             style={styles.dashboardEntryScroll}
             contentContainerStyle={styles.entryList}
@@ -2587,19 +2564,19 @@ const styles = StyleSheet.create({
     gap: 0,
   },
   entryRow: {
-    minHeight: 40,
+    minHeight: 36,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 6,
+    paddingVertical: 5,
   },
   entryIcon: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#F4F7EF',
+    backgroundColor: '#F7F8F6',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 9,
+    marginRight: 10,
   },
   entryIconText: {
     color: '#7E8682',
@@ -2607,47 +2584,31 @@ const styles = StyleSheet.create({
     lineHeight: 12,
     fontWeight: '900',
   },
-  entryTitleCell: {
+  entryTextWrap: {
     flex: 1,
-    minWidth: 0,
-    paddingRight: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   entryTitle: {
     color: '#424C47',
     fontSize: 12,
     lineHeight: 15,
     fontWeight: '800',
-  },
-  entryDateCell: {
-    width: 96,
-    minHeight: 26,
-    justifyContent: 'center',
-    borderLeftWidth: 1,
-    borderLeftColor: '#EEE9DE',
-    paddingLeft: 8,
-    paddingRight: 8,
+    flex: 1,
   },
   entrySub: {
     color: '#A4A29B',
-    fontSize: 9,
+    fontSize: 10,
     lineHeight: 12,
     fontWeight: '700',
+    marginRight: 12,
     textAlign: 'right',
-  },
-  entryAmountCell: {
-    width: 74,
-    minHeight: 26,
-    justifyContent: 'center',
-    borderLeftWidth: 1,
-    borderLeftColor: '#EEE9DE',
-    paddingLeft: 9,
   },
   entryAmount: {
     color: '#20312A',
     fontSize: 12,
     lineHeight: 15,
     fontWeight: '900',
-    textAlign: 'right',
   },
   actionRow: {
     flexDirection: 'row',
@@ -2892,51 +2853,21 @@ const styles = StyleSheet.create({
     minHeight: 0,
     borderRadius: 16,
     backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#ECE6DA',
-    paddingHorizontal: 10,
-    paddingVertical: 0,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
     marginBottom: 8,
     shadowColor: '#70843C',
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.045,
-    shadowRadius: 12,
-    elevation: 1,
-    overflow: 'hidden',
-  },
-  dashboardTableHeader: {
-    minHeight: 28,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E9E2D5',
-  },
-  dashboardTableHeaderText: {
-    color: '#A29A8B',
-    fontSize: 9,
-    lineHeight: 12,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-  },
-  dashboardTableTitleHeader: {
-    flex: 1,
-    paddingLeft: 33,
-  },
-  dashboardTableDateHeader: {
-    width: 96,
-    textAlign: 'right',
-    paddingRight: 8,
-  },
-  dashboardTableAmountHeader: {
-    width: 74,
-    textAlign: 'right',
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    elevation: 2,
   },
   dashboardEntryScroll: {
     flex: 1,
   },
   dashboardEntryDivider: {
     height: 1,
-    backgroundColor: '#EEE9DE',
+    backgroundColor: '#F0ECE3',
   },
   emptyEntryState: {
     minHeight: 64,
@@ -3452,31 +3383,23 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   incomeList: {
-    gap: 0,
+    gap: 12,
+    paddingBottom: 4,
   },
   incomeRowsScroll: {
-    height: 166,
-    marginBottom: 14,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#ECE6DA',
-    backgroundColor: '#FFFFFF',
+    height: 216,
+    marginBottom: 18,
     overflow: 'hidden',
-    shadowColor: '#2B3328',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.04,
-    shadowRadius: 16,
-    elevation: 1,
   },
   incomeSwipeWrap: {
-    height: 54,
+    height: 56,
     overflow: 'hidden',
     justifyContent: 'center',
   },
   incomeDeleteButton: {
     width: 78,
-    height: 54,
-    borderRadius: 0,
+    height: 56,
+    borderRadius: 11,
     backgroundColor: '#D96A54',
     alignItems: 'center',
     justifyContent: 'center',
@@ -3488,17 +3411,17 @@ const styles = StyleSheet.create({
     fontWeight: '900',
   },
   incomeRow: {
-    height: 54,
-    borderRadius: 0,
+    height: 56,
+    borderRadius: 11,
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 13,
-    paddingRight: 0,
-    borderBottomWidth: 1,
-    borderBottomColor: '#EEE9DE',
-    shadowOpacity: 0,
-    elevation: 0,
+    paddingHorizontal: 17,
+    shadowColor: '#2B3328',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.055,
+    shadowRadius: 18,
+    elevation: 2,
     zIndex: 2,
   },
   incomeIconCircle: {
@@ -3521,29 +3444,16 @@ const styles = StyleSheet.create({
     minWidth: 0,
     color: '#34413C',
     fontSize: 13,
-    lineHeight: 17,
-    fontWeight: '700',
+    fontWeight: '600',
     padding: 0,
-    marginRight: 8,
-  },
-  incomeAmountCell: {
-    width: 118,
-    height: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    borderLeftWidth: 1,
-    borderLeftColor: '#EEE9DE',
-    paddingLeft: 10,
-    paddingRight: 12,
+    marginRight: 10,
   },
   incomeAmountInput: {
-    flex: 1,
-    minWidth: 0,
+    width: 82,
     color: '#2B3330',
-    fontSize: 15,
-    lineHeight: 19,
-    fontWeight: '900',
+    fontSize: 16,
+    lineHeight: 20,
+    fontWeight: '800',
     textAlign: 'right',
     padding: 0,
   },
@@ -3551,8 +3461,8 @@ const styles = StyleSheet.create({
     color: '#6F7775',
     fontSize: 12,
     lineHeight: 16,
-    fontWeight: '800',
-    marginLeft: 6,
+    fontWeight: '700',
+    marginLeft: 8,
   },
   incomeAddButton: {
     height: 38,
