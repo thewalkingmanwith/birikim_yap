@@ -1429,7 +1429,7 @@ export default function App() {
     }
 
     return (
-      <Screen>
+      <Screen scroll={false}>
         <View style={styles.dashboardHeader}>
           <Text style={styles.dashboardAppName}>Birikim Yap</Text>
           <View style={styles.dashboardBell}>
@@ -1496,7 +1496,12 @@ export default function App() {
         <Text style={styles.dashboardSpendSub}>Toplam</Text>
 
         <View style={styles.dashboardListCard}>
-          <View style={styles.entryList}>
+          <ScrollView
+            style={styles.dashboardEntryScroll}
+            contentContainerStyle={styles.entryList}
+            nestedScrollEnabled
+            showsVerticalScrollIndicator={visibleEntries.length > 4}
+          >
             {visibleEntries.length > 0 ? (
               visibleEntries.map((entry, index) => (
                 <View key={entry.id}>
@@ -1512,7 +1517,7 @@ export default function App() {
                 <Text style={styles.emptyEntryText}>Harcama ekledikçe bu liste dolacak.</Text>
               </View>
             )}
-          </View>
+          </ScrollView>
         </View>
 
         <View style={styles.dashboardActionRow}>
@@ -1558,7 +1563,19 @@ export default function App() {
   );
 }
 
-function Screen({ children, centered }: { children: ReactNode; centered?: boolean }) {
+function Screen({
+  children,
+  centered,
+  scroll = true,
+}: {
+  children: ReactNode;
+  centered?: boolean;
+  scroll?: boolean;
+}) {
+  if (!scroll) {
+    return <View style={[styles.screen, styles.fixedScreen, centered && styles.centeredScreen]}>{children}</View>;
+  }
+
   return (
     <ScrollView
       contentContainerStyle={[styles.screen, centered && styles.centeredScreen]}
@@ -1587,6 +1604,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.screen,
     paddingTop: 8,
     paddingBottom: 18,
+  },
+  fixedScreen: {
+    flex: 1,
   },
   centeredScreen: {
     justifyContent: 'space-between',
@@ -2825,6 +2845,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   dashboardListCard: {
+    flex: 1,
+    minHeight: 96,
     borderRadius: 16,
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 12,
@@ -2835,6 +2857,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.06,
     shadowRadius: 14,
     elevation: 2,
+  },
+  dashboardEntryScroll: {
+    flex: 1,
   },
   dashboardEntryDivider: {
     height: 1,
