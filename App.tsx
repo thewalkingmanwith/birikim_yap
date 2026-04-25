@@ -1452,6 +1452,9 @@ export default function App() {
         <View style={styles.dashboardHeroCard}>
           <View style={styles.dashboardHeroTop}>
             <View style={styles.dashboardHeroCopy}>
+              <View style={styles.dashboardGoalChip}>
+                <Text style={styles.dashboardGoalChipText}>HEDEF</Text>
+              </View>
               <Text style={styles.dashboardHeroLabel}>Aylık birikim hedefin</Text>
               <Text style={styles.dashboardHeroAmount}>{money(totals.savingsGoal)}</Text>
             </View>
@@ -1467,17 +1470,21 @@ export default function App() {
             </View>
           </View>
 
-          <View style={styles.dashboardStatRow}>
-            <Text style={styles.dashboardStatLabel}>Biriktirmen gereken</Text>
-            <Text style={styles.dashboardStatAccent}>{money(totals.savingsGoal)}</Text>
-          </View>
-          <View style={styles.dashboardStatRow}>
-            <Text style={styles.dashboardStatLabel}>Bugüne kadar harcadığın</Text>
-            <Text style={styles.dashboardStatAccent}>{money(dashboardSpent)}</Text>
-          </View>
-          <View style={styles.dashboardStatRow}>
-            <Text style={styles.dashboardStatLabel}>Kalan harcama hakkın</Text>
-            <Text style={styles.dashboardStatStrong}>{money(dashboardRemaining)}</Text>
+          <View style={styles.dashboardStatPanel}>
+            <View style={styles.dashboardStatRow}>
+              <Text style={styles.dashboardStatLabel}>Biriktirmen gereken</Text>
+              <Text style={styles.dashboardStatAccent}>{money(totals.savingsGoal)}</Text>
+            </View>
+            <View style={styles.dashboardStatDivider} />
+            <View style={styles.dashboardStatRow}>
+              <Text style={styles.dashboardStatLabel}>Bugüne kadar harcadığın</Text>
+              <Text style={styles.dashboardStatAccent}>{money(dashboardSpent)}</Text>
+            </View>
+            <View style={styles.dashboardStatDivider} />
+            <View style={styles.dashboardStatRow}>
+              <Text style={styles.dashboardStatLabel}>Kalan harcama hakkın</Text>
+              <Text style={styles.dashboardStatStrong}>{money(dashboardRemaining)}</Text>
+            </View>
           </View>
         </View>
 
@@ -2729,38 +2736,57 @@ const styles = StyleSheet.create({
   },
   dashboardHeroCard: {
     borderRadius: 18,
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 12,
-    paddingTop: 9,
-    paddingBottom: 7,
+    backgroundColor: '#FEFDF9',
+    borderWidth: 1,
+    borderColor: '#ECE6DA',
+    paddingHorizontal: 11,
+    paddingTop: 10,
+    paddingBottom: 9,
     marginBottom: 8,
-    shadowColor: '#70843C',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.07,
-    shadowRadius: 16,
+    shadowColor: '#556631',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.075,
+    shadowRadius: 18,
     elevation: 2,
   },
   dashboardHeroTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 8,
   },
   dashboardHeroCopy: {
     flex: 1,
     paddingRight: 10,
   },
-  dashboardHeroLabel: {
-    color: '#7E8682',
-    fontSize: 12,
-    lineHeight: 15,
-    fontWeight: '700',
+  dashboardGoalChip: {
+    alignSelf: 'flex-start',
+    borderRadius: 7,
+    borderWidth: 1,
+    borderColor: '#DDE8C9',
+    backgroundColor: '#F5F8EF',
+    paddingHorizontal: 7,
+    paddingVertical: 3,
     marginBottom: 6,
   },
+  dashboardGoalChipText: {
+    color: '#78924D',
+    fontSize: 8,
+    lineHeight: 10,
+    fontWeight: '900',
+    letterSpacing: 0,
+  },
+  dashboardHeroLabel: {
+    color: '#68736D',
+    fontSize: 11,
+    lineHeight: 15,
+    fontWeight: '800',
+    marginBottom: 4,
+  },
   dashboardHeroAmount: {
-    color: '#20312A',
-    fontSize: 19,
-    lineHeight: 23,
+    color: '#182B23',
+    fontSize: 21,
+    lineHeight: 25,
     fontWeight: '900',
   },
   dashboardRingWrap: {
@@ -2774,28 +2800,30 @@ const styles = StyleSheet.create({
     width: 76,
     height: 76,
     borderRadius: 38,
-    borderWidth: 6,
-    borderColor: '#EFECE4',
+    borderWidth: 7,
+    borderColor: '#EEE8DC',
   },
   dashboardRingArc: {
     position: 'absolute',
     width: 76,
     height: 76,
     borderRadius: 38,
-    borderWidth: 6,
+    borderWidth: 7,
     borderLeftColor: 'transparent',
-    borderTopColor: '#78924D',
+    borderTopColor: '#8CA85D',
     borderRightColor: '#78924D',
-    borderBottomColor: '#78924D',
+    borderBottomColor: '#6F8846',
     transform: [{ rotate: '28deg' }],
   },
   dashboardRingInner: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 54,
+    height: 54,
+    borderRadius: 27,
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#F0EADF',
   },
   dashboardRingValue: {
     color: '#20312A',
@@ -2810,24 +2838,36 @@ const styles = StyleSheet.create({
     lineHeight: 10,
     fontWeight: '700',
   },
+  dashboardStatPanel: {
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#EEE7DA',
+    backgroundColor: '#FAF8F1',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+  },
   dashboardStatRow: {
-    minHeight: 20,
+    minHeight: 24,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 8,
   },
-  dashboardStatLabel: {
-    color: '#7E8682',
-    fontSize: 12,
-    lineHeight: 15,
-    fontWeight: '700',
+  dashboardStatDivider: {
+    height: 1,
+    backgroundColor: '#EDE6D9',
   },
-  dashboardStatAccent: {
-    color: '#8AA45A',
-    fontSize: 12,
+  dashboardStatLabel: {
+    color: '#6F7772',
+    fontSize: 11,
     lineHeight: 15,
     fontWeight: '800',
+  },
+  dashboardStatAccent: {
+    color: '#829C55',
+    fontSize: 12,
+    lineHeight: 15,
+    fontWeight: '900',
     textAlign: 'right',
   },
   dashboardStatStrong: {
