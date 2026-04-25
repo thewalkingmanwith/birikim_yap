@@ -92,7 +92,7 @@ const spacing = {
   radius: 10,
 };
 
-const androidSystemBottomInset = Platform.OS === 'android' ? 72 : 0;
+const androidFooterClearance = Platform.OS === 'android' ? 48 : 0;
 
 const welcomeLogoHero = require('./assets/welcome-logo-direct.png');
 
@@ -1605,7 +1605,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: spacing.screen,
     paddingTop: 4,
-    paddingBottom: 10 + androidSystemBottomInset,
+    paddingBottom: 18 + androidFooterClearance,
   },
   fixedScreen: {
     flex: 1,
@@ -1708,7 +1708,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F6EF',
     paddingHorizontal: 28,
     paddingTop: 18,
-    paddingBottom: 18 + androidSystemBottomInset,
+    paddingBottom: 24 + androidFooterClearance,
     alignItems: 'center',
   },
   welcomeHero: {
@@ -3325,7 +3325,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 27,
     paddingTop: 24,
-    paddingBottom: 24 + androidSystemBottomInset,
+    paddingBottom: 18 + androidFooterClearance,
   },
   incomeScroll: {
     flex: 1,
@@ -3387,9 +3387,8 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   incomeRowsScroll: {
-    flex: 1,
-    minHeight: 0,
-    marginBottom: 10,
+    height: 216,
+    marginBottom: 18,
     overflow: 'hidden',
   },
   incomeSwipeWrap: {
