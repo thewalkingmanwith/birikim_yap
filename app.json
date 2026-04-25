@@ -25,7 +25,11 @@
       "backgroundColor": "#FDFBF6"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSSpeechRecognitionUsageDescription": "Birikim Yap söylediklerini harcama kaydına dönüştürmek için konuşma tanımayı kullanır.",
+        "NSMicrophoneUsageDescription": "Birikim Yap sesle harcama eklemek için mikrofonu kullanır."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -33,7 +37,11 @@
         "backgroundColor": "#FDFBF6"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.thewalkingman.birikimyap"
     },
     "web": {
       "favicon": "./assets/favicon.png"
